@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 // Coord structure
@@ -69,20 +70,22 @@ func main() {
 
 	citiesCZ := GetCities()
 
+	// Rate limiting
+	limiter := time.Tick(time.Second)
+
 	var cities []Measure
 	for i := 0; i < 5; i++ {
+		<-limiter
 
 		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?id=%v&units=metric&appid=%s", citiesCZ[i].ID, APIKEY)
 
 		resp, err := http.Get(url)
-
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalf("Error at ID:%v ----> %s\n", citiesCZ[i].ID, err)
 		}
 
 		var one Measure
 		json.NewDecoder(resp.Body).Decode(&one)
-		fmt.Printf("%v | %s | %s | %v \n", one.ID, citiesCZ[i].Name, one.Weather[0].Description, one.Main.Temp)
 
 		cities = append(cities, one)
 	}
