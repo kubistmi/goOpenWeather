@@ -16,7 +16,7 @@ type City struct {
 	Coord   `json:"coord"`
 }
 
-// GetCities is used to collect the file of City IDs rom OpenWeatherMap
+// GetCities is used to collect the file of City IDs from OpenWeatherMap
 func GetCities() []City {
 
 	var empty []City
