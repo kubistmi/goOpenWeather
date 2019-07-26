@@ -8,20 +8,23 @@ import (
 	"net/http"
 )
 
+// Coord structure
+type Coord struct {
+	Lon float32 `json:"lon"`
+	Lat float32 `json:"lat"`
+}
+
 // Measure describes the json schema
 type Measure struct {
-	Coord struct {
-		Lon float64 `json:"lon"`
-		Lat float64 `json:"lat"`
-	} `json:"coord"`
-	Weather []struct {
+	Coord      `json:"coord"` // Unused
+	Conditions []struct {
 		ID          int    `json:"id"`
 		Main        string `json:"main"`
 		Description string `json:"description"`
-		Icon        string `json:"icon"`
+		Icon        string `json:"icon"` // Unused
 	} `json:"weather"`
-	Base string `json:"base"`
-	Main struct {
+	Base     string `json:"base"` // Unused
+	Measures struct {
 		Temp     float64 `json:"temp"`
 		Pressure int     `json:"pressure"`
 		Humidity int     `json:"humidity"`
@@ -38,17 +41,17 @@ type Measure struct {
 	} `json:"clouds"`
 	Dt  int `json:"dt"`
 	Sys struct {
-		Type    int     `json:"type"`
-		ID      int     `json:"id"`
-		Message float64 `json:"message"`
-		Country string  `json:"country"`
+		Type    int     `json:"type"`    // Unused
+		ID      int     `json:"id"`      // Unused
+		Message float64 `json:"message"` // Unused
+		Country string  `json:"country"` // Unused
 		Sunrise int     `json:"sunrise"`
 		Sunset  int     `json:"sunset"`
 	} `json:"sys"`
 	Timezone int    `json:"timezone"`
-	ID       int    `json:"id"`
-	Name     string `json:"name"`
-	Cod      int    `json:"cod"`
+	CityID   int    `json:"id"`   //? Check against Cities
+	CityName string `json:"name"` //? Check against Cities
+	Cod      int    `json:"cod"`  // Unused
 }
 
 func main() {
