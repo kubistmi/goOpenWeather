@@ -16,12 +16,6 @@ type City struct {
 	Coord   `json:"coord"`
 }
 
-// Coord structure
-type Coord struct {
-	Lon float32 `json:"lon"`
-	Lat float32 `json:"lat"`
-}
-
 // GetCities is used to collect the file of City IDs rom OpenWeatherMap
 func GetCities() []City {
 
@@ -37,6 +31,7 @@ func GetCities() []City {
 	if err != nil {
 		return empty
 	}
+
 	defer resp.Body.Close()
 
 	gz, err := gzip.NewReader(resp.Body)
