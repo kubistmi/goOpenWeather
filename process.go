@@ -3,9 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	//"io/ioutil"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 // Coord structure
@@ -55,11 +56,23 @@ type Measure struct {
 }
 
 func main() {
+
+	keyFile, err := os.Open("api")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	APIKEY, err := ioutil.ReadAll(keyFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	citiesCZ := GetCities()
 
 	var cities []Measure
 	for i := 0; i < 5; i++ {
-		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?id=%v&units=metric&appid=%s", citiesCZ[i].ID, "2ef0af7b4735394260790c58a56f8810")
+
+		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?id=%v&units=metric&appid=%s", citiesCZ[i].ID, APIKEY)
 
 		resp, err := http.Get(url)
 
