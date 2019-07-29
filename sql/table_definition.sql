@@ -8,7 +8,7 @@ CREATE TABLE cities (
 
 CREATE TABLE weather(
 	city_id             integer     references cities(id),
-	conditions          JSONB,
+	conditions          JSONB       not null,
 	temperature         numeric     not null,
 	pressure            smallint    not null,
 	humidity            smallint    not null,
