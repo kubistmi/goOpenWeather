@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -28,18 +26,6 @@ func main() {
 	}
 
 	citiesCZ := GetCities()
-	weather := GetWeather(citiesCZ, APIKEY, time.Second)
-
-	fmt.Println(weather[0])
-	fmt.Println(weather[len(weather)-1])
-
-	weatherJSON, err := json.Marshal(weather)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = ioutil.WriteFile("weather.json", weatherJSON, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
+	weather := GetWeather(&citiesCZ, APIKEY, time.Second)
+	UploadSQL(&weather, &citiesCZ)
 }
