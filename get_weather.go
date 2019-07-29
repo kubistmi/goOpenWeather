@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql/driver"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -8,17 +9,33 @@ import (
 	"time"
 )
 
+// Condition describes current weather condition
+type Condition struct {
+	ID          int    `json:"id"`
+	Main        string `json:"main"`
+	Description string `json:"description"`
+	Icon        string `json:"icon"`
+}
+
+// Conditions wraps the array of distinct conditions
+type Conditions []Condition
+
+// Value method is used to implement the driver.Valuer interface
+// Provides serialization into
+func (c Conditions) Value() driver.Value {
+	val, err := json.Marshal(c)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return val
+}
+
 // Measure describes the json schema
 type Measure struct {
 	Coord      `json:"coord"` // Unused
-	Conditions []struct {
-		ID          int    `json:"id"`
-		Main        string `json:"main"`
-		Description string `json:"description"`
-		Icon        string `json:"icon"` // Unused
-	} `json:"weather"`
-	Base     string `json:"base"` // Unused
-	Measures struct {
+	Conditions `json:"weather"`
+	Base       string `json:"base"` // Unused
+	Measures   struct {
 		Temp     float64 `json:"temp"`
 		Pressure int     `json:"pressure"`
 		Humidity int     `json:"humidity"`
