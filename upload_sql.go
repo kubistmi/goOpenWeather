@@ -30,6 +30,24 @@ func UploadSQL(weather *[]Measure, cities *[]City) {
 		log.Fatal(err)
 	}
 
+	// BUILD TABLES IF NEEDED
+	sqlDefFile, err := os.Open("sql/table_definition.sql")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	sqlDefBytes, err := ioutil.ReadAll(sqlDefFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	sqlDef := string(sqlDefBytes)
+
+	_, err = db.Exec(sqlDef)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// CITIES TRANSACTION PREPARATION
 	trnc, err := db.Begin()
 	if err != nil {

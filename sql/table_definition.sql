@@ -1,4 +1,4 @@
-CREATE TABLE cities (
+CREATE TABLE IF NOT EXISTS cities (
     id                  integer     primary key,
     city                varchar     not null,
     country             varchar     not null,
@@ -6,7 +6,7 @@ CREATE TABLE cities (
     lat                 numeric     not null
 );
 
-CREATE TABLE weather(
+CREATE TABLE IF NOT EXISTS weather(
 	city_id             integer     references cities(id),
 	conditions          JSONB       not null,
 	temperature         numeric     not null,
