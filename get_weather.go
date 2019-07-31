@@ -87,14 +87,15 @@ func GetWeather(cities *[]City, APIKEY []byte, rate time.Duration) []Measure {
 		}
 
 		var CityWeather Measure
-		json.NewDecoder(resp.Body).Decode(&CityWeather)
+		if resp.StatusCode == 200 {
+			json.NewDecoder(resp.Body).Decode(&CityWeather)
 
-		if val.Name != CityWeather.CityName {
-			log.Fatalf("Error at ID:%v ----> || The city names do not match between cities and weather json. This really shouldn't happen. \n", val.ID)
+			if val.Name != CityWeather.CityName {
+				log.Fatalf("Error at ID:%v ----> || The city names do not match between cities and weather json. This really shouldn't happen. \n", val.ID)
+			}
 		}
 
 		weather[ix] = CityWeather
-		//	}
 	}
 
 	return weather
