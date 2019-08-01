@@ -6,8 +6,10 @@ CREATE TABLE IF NOT EXISTS cities (
     lat                 numeric     not null
 );
 
+TRUNCATE TABLE cities;
+
 CREATE TABLE IF NOT EXISTS weather(
-	city_id             integer     references cities(id),
+	city_id             integer     not null, --references cities(id),
 	conditions          JSONB       not null,
 	temperature         numeric     not null,
 	pressure            smallint    not null,
