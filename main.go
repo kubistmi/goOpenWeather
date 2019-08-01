@@ -15,7 +15,7 @@ type Coord struct {
 
 func main() {
 
-	path := "/home/kubistmi/go/src/weather"
+	path := "/home/kubistmi/go/src/weather/"
 
 	keyFile, err := os.Open(path + "api")
 	if err != nil {
