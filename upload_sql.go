@@ -10,10 +10,10 @@ import (
 )
 
 // UploadSQL takes the downloaded data and uploads them to postgreSQL database
-func UploadSQL(weather *[]Measure, cities *[]City) {
+func UploadSQL(weather *[]Measure, cities *[]City, path string) {
 
 	// DATABASE CONNECTION
-	sqlFile, err := os.Open("connstr")
+	sqlFile, err := os.Open(path + "connstr")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,7 +31,7 @@ func UploadSQL(weather *[]Measure, cities *[]City) {
 	}
 
 	// BUILD TABLES IF NEEDED
-	sqlDefFile, err := os.Open("sql/table_definition.sql")
+	sqlDefFile, err := os.Open(path + "sql/table_definition.sql")
 	if err != nil {
 		log.Fatal(err)
 	}

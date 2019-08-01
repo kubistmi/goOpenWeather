@@ -15,7 +15,9 @@ type Coord struct {
 
 func main() {
 
-	keyFile, err := os.Open("api")
+	path := "/home/kubistmi/go/src/weather"
+
+	keyFile, err := os.Open(path + "api")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,5 +29,5 @@ func main() {
 
 	citiesCZ := GetCities()
 	weather := GetWeather(&citiesCZ, APIKEY, time.Second)
-	UploadSQL(&weather, &citiesCZ)
+	UploadSQL(&weather, &citiesCZ, path)
 }
