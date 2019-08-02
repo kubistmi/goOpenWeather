@@ -23,5 +23,6 @@ CREATE TABLE IF NOT EXISTS weather(
 	sunrise             integer     not null,
 	sunset              integer     not null,
 	timezone            integer     not null,
-	extraction_time     integer     not null
+	extraction_time     integer     not null,
+	batch               integer     not null
 );

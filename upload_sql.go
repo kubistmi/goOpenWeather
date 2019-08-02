@@ -10,7 +10,7 @@ import (
 )
 
 // UploadSQL takes the downloaded data and uploads them to postgreSQL database
-func UploadSQL(weather *[]Measure, cities *[]City, path string) {
+func UploadSQL(weather *[]Measure, cities *[]City, path string, batch int) {
 
 	// DATABASE CONNECTION
 	sqlFile, err := os.Open(path + "connstr")
@@ -96,7 +96,7 @@ func UploadSQL(weather *[]Measure, cities *[]City, path string) {
 		pq.CopyIn(
 			"weather", //table
 			"city_id", "conditions", "temperature", "pressure", "humidity", "temp_min", "temp_max", "visibility",
-			"winddir", "windspeed", "clouds", "sunrise", "sunset", "timezone", "extraction_time"))
+			"winddir", "windspeed", "clouds", "sunrise", "sunset", "timezone", "extraction_time", "batch"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -105,7 +105,7 @@ func UploadSQL(weather *[]Measure, cities *[]City, path string) {
 		_, err = stm.Exec(
 			record.CityID, record.Conditions.Value(), record.Measures.Temp, record.Measures.Pressure, record.Measures.Humidity,
 			record.Measures.TempMin, record.Measures.TempMax, record.Visibility, record.Wind.Deg, record.Wind.Speed, record.Clouds.All,
-			record.Sys.Sunrise, record.Sys.Sunset, record.Timezone, record.Dt)
+			record.Sys.Sunrise, record.Sys.Sunset, record.Timezone, record.Dt, batch)
 		if err != nil {
 			log.Fatal(err)
 		}

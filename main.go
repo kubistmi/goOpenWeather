@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"time"
+	"strconv"
 )
 
 // Coord structure
@@ -14,6 +15,11 @@ type Coord struct {
 }
 
 func main() {
+
+	batch, err := strconv.Atoi(time.Now().Format("2006010215"))
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	path := "/home/kubistmi/go/src/weather/"
 
@@ -29,5 +35,5 @@ func main() {
 
 	citiesCZ := GetCities()
 	weather := GetWeather(&citiesCZ, APIKEY, time.Second)
-	UploadSQL(&weather, &citiesCZ, path)
+	UploadSQL(&weather, &citiesCZ, path, batch)
 }
