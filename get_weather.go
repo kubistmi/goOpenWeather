@@ -21,7 +21,6 @@ type Condition struct {
 type Conditions []Condition
 
 // Value method is used to implement the driver.Valuer interface
-// Provides serialization into
 func (c Conditions) Value() driver.Value {
 	val, err := json.Marshal(c)
 	if err != nil {
@@ -60,7 +59,7 @@ type Measure struct {
 		Sunset  int     `json:"sunset"`
 	} `json:"sys"`
 	Timezone int    `json:"timezone"`
-	CityID   int    `json:"id"`   //? Check against Cities
+	CityID   int    `json:"id"`   // Unused
 	CityName string `json:"name"` //? Check against Cities
 	Cod      int    `json:"cod"`  // Unused
 }
