@@ -65,7 +65,7 @@ type Measure struct {
 }
 
 // GetWeather is used to collect all wetaher data for the provided cities.
-func GetWeather(cities *[]City, APIKEY []byte, rate time.Duration) []Measure {
+func GetWeather(cities *[]City, rate time.Duration) []Measure {
 
 	// Rate limiting
 	limiter := time.Tick(rate)
@@ -78,7 +78,7 @@ func GetWeather(cities *[]City, APIKEY []byte, rate time.Duration) []Measure {
 		//if ix < 5 { //! REMOVE AFTER TESTING
 		<-limiter
 
-		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?id=%v&units=metric&appid=%s", val.ID, APIKEY)
+		url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?id=%v&units=metric&appid=%s", val.ID, Conf.Weather)
 
 		resp, err := http.Get(url)
 		if err != nil {
