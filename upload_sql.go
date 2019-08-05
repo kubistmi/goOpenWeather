@@ -29,6 +29,7 @@ func UploadSQL(weather *[]Measure, cities *[]City, path string) {
 	if err != nil {
 		return
 	}
+	defer sqlDefFile.Close()
 
 	sqlDefBytes, err := ioutil.ReadAll(sqlDefFile)
 	if err != nil {

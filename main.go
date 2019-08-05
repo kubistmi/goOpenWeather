@@ -43,12 +43,15 @@ func main() {
 		log.Fatal(err)
 	}
 
-	path := os.Getenv("GOPATH") + "/src/weather/"
+	//path := os.Getenv("GOPATH") + "/src/weather/"
+    path := "/home/kubistmi/projects/go/weather/"
 
 	conFile, err := os.Open(path + "config.json")
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer conFile.Close()
+
 	json.NewDecoder(conFile).Decode(&Conf)
 
 	text := fmt.Sprintf("Mark the beginnig of the process %v", Batch)
