@@ -104,6 +104,7 @@ func GetWeather(cities *[]City, rate time.Duration) []Measure {
 		}
 
 		weather[ix] = CityWeather
+		//} //! REMOVE AFTER TESTING
 	}
 
 	return weather

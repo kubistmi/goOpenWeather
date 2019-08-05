@@ -38,7 +38,6 @@ func Alert(err error, API string, batch int) {
 }
 
 func main() {
-
 	Batch, err := strconv.Atoi(time.Now().Format("2006010215"))
 	if err != nil {
 		log.Fatal(err)
@@ -51,6 +50,10 @@ func main() {
 		log.Fatal(err)
 	}
 	json.NewDecoder(conFile).Decode(&Conf)
+
+	text := fmt.Sprintf("Mark the beginnig of the process %v", Batch)
+	msg := slackman.NewMessage(Conf.Slack, "#log---weather", "GoLog", text, "https://img.icons8.com/cotton/2x/server.png")
+	msg.Send()
 
 	citiesCZ := GetCities()
 	weather := GetWeather(&citiesCZ, time.Second)
