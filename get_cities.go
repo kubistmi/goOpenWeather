@@ -4,7 +4,6 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
@@ -23,7 +22,7 @@ func GetCities() []City {
 	var err error
 	defer func() {
 		if err != nil {
-			log.Fatal(err)
+			Alert(err, Conf.Slack, Batch)
 		}
 	}()
 

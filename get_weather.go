@@ -4,7 +4,6 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 )
@@ -24,7 +23,7 @@ type Conditions []Condition
 func (c Conditions) Value() driver.Value {
 	val, err := json.Marshal(c)
 	if err != nil {
-		log.Fatal(err)
+		Alert(err, Conf.Slack, Batch)
 	}
 	return val
 }
@@ -67,6 +66,14 @@ type Measure struct {
 // GetWeather is used to collect all wetaher data for the provided cities.
 func GetWeather(cities *[]City, rate time.Duration) []Measure {
 
+	var empty []Measure
+	var err error
+	defer func() {
+		if err != nil {
+			Alert(err, Conf.Slack, Batch)
+		}
+	}()
+
 	// Rate limiting
 	limiter := time.Tick(rate)
 
@@ -82,7 +89,8 @@ func GetWeather(cities *[]City, rate time.Duration) []Measure {
 
 		resp, err := http.Get(url)
 		if err != nil {
-			log.Fatalf("Error at ID:%v ----> %s\n", val.ID, err)
+			err = fmt.Errorf("Error at ID:%v ----> %s", val.ID, err)
+			return empty
 		}
 
 		var CityWeather Measure
@@ -90,7 +98,8 @@ func GetWeather(cities *[]City, rate time.Duration) []Measure {
 			json.NewDecoder(resp.Body).Decode(&CityWeather)
 
 			if val.Name != CityWeather.CityName {
-				log.Fatalf("Error at ID:%v ----> || The city names do not match between cities and weather json. This really shouldn't happen. \n", val.ID)
+				err = fmt.Errorf("Error at ID:%v ----> || The city names do not match between cities and weather json. This really shouldn't happen", val.ID)
+				return empty
 			}
 		}
 

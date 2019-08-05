@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
+	"slackman"
 	"strconv"
 	"time"
 )
@@ -29,10 +29,13 @@ var Conf Configuration
 // Batch describes the process ID
 var Batch int
 
-	batch, err := strconv.Atoi(time.Now().Format("2006010215"))
-	if err != nil {
-		log.Fatal(err)
-	}
+// Alert takes care of sending the Slack message and logging the error
+func Alert(err error, API string, batch int) {
+	text := fmt.Sprintf("The loading batch [%v] failed due to the following error: %v \n", batch, err)
+	msg := slackman.NewMessage(API, "#log---weather", "GoLog", text, "https://img.icons8.com/cotton/2x/server.png")
+	msg.Send()
+	log.Fatal(err)
+}
 
 func main() {
 
