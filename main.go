@@ -44,7 +44,7 @@ func main() {
 	}
 
 	//path := os.Getenv("GOPATH") + "/src/weather/"
-    path := "/home/kubistmi/projects/go/weather/"
+	path := "/home/kubistmi/go/src/weather/"
 
 	conFile, err := os.Open(path + "config.json")
 	if err != nil {
@@ -53,10 +53,6 @@ func main() {
 	defer conFile.Close()
 
 	json.NewDecoder(conFile).Decode(&Conf)
-
-	text := fmt.Sprintf("Mark the beginnig of the process %v", Batch)
-	msg := slackman.NewMessage(Conf.Slack, "#log---weather", "GoLog", text, "https://img.icons8.com/cotton/2x/server.png")
-	msg.Send()
 
 	citiesCZ := GetCities()
 	weather := GetWeather(&citiesCZ, time.Second)
