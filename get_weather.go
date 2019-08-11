@@ -80,7 +80,6 @@ func GetWeather(cities *[]City, rate time.Duration) []Measure {
 	weather := make([]Measure, len(*cities))
 	//weather := make([]Measure, 5) //! REMOVE AFTER TESTING
 
-	//for ix, val := range cities {
 	for ix, val := range *cities {
 		//if ix < 5 { //! REMOVE AFTER TESTING
 		<-limiter
