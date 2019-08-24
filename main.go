@@ -40,8 +40,7 @@ func Alert(err error, API string) {
 func main() {
 	Batch, _ = strconv.Atoi(time.Now().Format("2006010215"))
 
-	//path := os.Getenv("GOPATH") + "/src/weather/"
-	path := "/home/kubistmi/go/src/weather/"
+	path := os.Getenv("HOME") + "/go/src/weather/"
 
 	conFile, err := os.Open(path + "config.json")
 	if err != nil {
@@ -55,5 +54,8 @@ func main() {
 	weather := GetWeather(&citiesCZ, time.Second)
 	UploadSQL(&weather, &citiesCZ, path)
 
-	log.Printf("Finished the loading %v\n", Batch)
+	// Log success
+	finished := fmt.Sprintf("Finished the loading %v\n", Batch)
+	slackman.NewMessage(Conf.Slack, "#log---weather", "GoLog", finished, "https://img.icons8.com/cotton/2x/server.png").Send()
+	log.Print(finished)
 }
