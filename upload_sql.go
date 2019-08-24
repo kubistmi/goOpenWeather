@@ -14,7 +14,7 @@ func UploadSQL(weather *[]Measure, cities *[]City, path string) {
 	var err error
 	defer func() {
 		if err != nil {
-			Alert(err, Conf.Slack, Batch)
+			Alert(err, Conf.Slack)
 		}
 	}()
 

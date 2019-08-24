@@ -22,7 +22,7 @@ func GetCities() []City {
 	var err error
 	defer func() {
 		if err != nil {
-			Alert(err, Conf.Slack, Batch)
+			Alert(err, Conf.Slack)
 		}
 	}()
 

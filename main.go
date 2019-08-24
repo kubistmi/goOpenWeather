@@ -30,18 +30,15 @@ var Conf Configuration
 var Batch int
 
 // Alert takes care of sending the Slack message and logging the error
-func Alert(err error, API string, batch int) {
-	text := fmt.Sprintf("The loading batch [%v] failed due to the following error: %v \n", batch, err)
+func Alert(err error, API string) {
+	text := fmt.Sprintf("The loading batch [%v] failed due to the following error: %v \n", Batch, err)
 	msg := slackman.NewMessage(API, "#log---weather", "GoLog", text, "https://img.icons8.com/cotton/2x/server.png")
 	msg.Send()
 	log.Fatal(err)
 }
 
 func main() {
-	Batch, err := strconv.Atoi(time.Now().Format("2006010215"))
-	if err != nil {
-		log.Fatal(err)
-	}
+	Batch, _ = strconv.Atoi(time.Now().Format("2006010215"))
 
 	//path := os.Getenv("GOPATH") + "/src/weather/"
 	path := "/home/kubistmi/go/src/weather/"

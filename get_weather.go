@@ -23,7 +23,7 @@ type Conditions []Condition
 func (c Conditions) Value() driver.Value {
 	val, err := json.Marshal(c)
 	if err != nil {
-		Alert(err, Conf.Slack, Batch)
+		Alert(err, Conf.Slack)
 	}
 	return val
 }
@@ -70,7 +70,7 @@ func GetWeather(cities *[]City, rate time.Duration) []Measure {
 	var err error
 	defer func() {
 		if err != nil {
-			Alert(err, Conf.Slack, Batch)
+			Alert(err, Conf.Slack)
 		}
 	}()
 
