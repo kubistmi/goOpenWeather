@@ -23,7 +23,7 @@ type Conditions []Condition
 func (c Conditions) Value() driver.Value {
 	val, err := json.Marshal(c)
 	if err != nil {
-		Alert(err, Conf.Slack)
+		Alert(err, Conf.Slack, false)
 	}
 	return val
 }
@@ -64,15 +64,10 @@ type Measure struct {
 }
 
 // GetWeather is used to collect all wetaher data for the provided cities.
-func GetWeather(cities *[]City, rate time.Duration) []Measure {
+func GetWeather(cities *[]City, rate time.Duration) ([]Measure, error) {
 
 	var empty []Measure
 	var err error
-	defer func() {
-		if err != nil {
-			Alert(err, Conf.Slack)
-		}
-	}()
 
 	// Rate limiting
 	limiter := time.Tick(rate)
@@ -88,17 +83,17 @@ func GetWeather(cities *[]City, rate time.Duration) []Measure {
 
 		resp, err := http.Get(url)
 		if err != nil {
-			err = fmt.Errorf("Error at ID:%v ----> %s", val.ID, err)
-			return empty
+			err = fmt.Errorf("Error in API request at ID:%v ----> %s", val.ID, err)
+			return empty, err
 		}
 
 		var CityWeather Measure
 		if resp.StatusCode == 200 {
-			json.NewDecoder(resp.Body).Decode(&CityWeather)
+			err := json.NewDecoder(resp.Body).Decode(&CityWeather)
 
-			if val.Name != CityWeather.CityName {
-				err = fmt.Errorf("Error at ID:%v ----> || The city names do not match between cities and weather json. This really shouldn't happen", val.ID)
-				return empty
+			if err != nil {
+				err = fmt.Errorf("Error in deserialization at ID:%v ----> %s", val.ID, err)
+				return empty, err
 			}
 		}
 
@@ -106,5 +101,5 @@ func GetWeather(cities *[]City, rate time.Duration) []Measure {
 		//} //! REMOVE AFTER TESTING
 	}
 
-	return weather
+	return weather, err
 }

@@ -30,11 +30,13 @@ var Conf Configuration
 var Batch int
 
 // Alert takes care of sending the Slack message and logging the error
-func Alert(err error, API string) {
+func Alert(err error, API string, fatal bool) {
 	text := fmt.Sprintf("The loading batch [%v] failed due to the following error: %v \n", Batch, err)
 	msg := slackman.NewMessage(API, "#log---weather", "GoLog", text, "https://img.icons8.com/cotton/2x/server.png")
 	msg.Send()
-	log.Fatal(err)
+	if fatal {
+		log.Fatal(err)
+	}
 }
 
 func main() {
@@ -48,11 +50,25 @@ func main() {
 	}
 	defer conFile.Close()
 
-	json.NewDecoder(conFile).Decode(&Conf)
+	err = json.NewDecoder(conFile).Decode(&Conf)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	citiesCZ := GetCities()
-	weather := GetWeather(&citiesCZ, time.Second)
-	UploadSQL(&weather, &citiesCZ, path)
+	citiesCZ, err := GetCities()
+	if err != nil {
+		Alert(err, Conf.Slack, true)
+	}
+
+	weather, err := GetWeather(&citiesCZ, time.Second)
+	if err != nil {
+		Alert(err, Conf.Slack, true)
+	}
+
+	err = UploadSQL(&weather, &citiesCZ, path)
+	if err != nil {
+		Alert(err, Conf.Slack, true)
+	}
 
 	// Log success
 	finished := fmt.Sprintf("Finished the loading %v\n", Batch)
