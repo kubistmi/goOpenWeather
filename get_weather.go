@@ -23,7 +23,7 @@ type Conditions []Condition
 func (c Conditions) Value() driver.Value {
 	val, err := json.Marshal(c)
 	if err != nil {
-		Alert(err, Conf.Slack, false)
+		Alert(err, false)
 	}
 	return val
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"slackman"
 	"strconv"
 	"time"
 )
@@ -20,7 +19,6 @@ type Coord struct {
 type Configuration struct {
 	Weather string `json:"weather"`
 	Psql    string `json:"psql"`
-	Slack   string `json:"slack"`
 }
 
 // Conf is prepared for JSON unmarshalling
@@ -29,13 +27,11 @@ var Conf Configuration
 // Batch describes the process ID
 var Batch int
 
-// Alert takes care of sending the Slack message and logging the error
-func Alert(err error, API string, fatal bool) {
+// Alert takes care of logging the error
+func Alert(err error, fatal bool) {
 	text := fmt.Sprintf("The loading batch [%v] failed due to the following error: %v \n", Batch, err)
-	msg := slackman.NewMessage(API, "#log---weather", "GoLog", text, "https://img.icons8.com/cotton/2x/server.png")
-	msg.Send()
 	if fatal {
-		log.Fatal(err)
+		log.Fatal(text)
 	}
 }
 
@@ -57,21 +53,20 @@ func main() {
 
 	citiesCZ, err := GetCities()
 	if err != nil {
-		Alert(err, Conf.Slack, true)
+		Alert(err, true)
 	}
 
 	weather, err := GetWeather(&citiesCZ, time.Second)
 	if err != nil {
-		Alert(err, Conf.Slack, true)
+		Alert(err, true)
 	}
 
 	err = UploadSQL(&weather, &citiesCZ, path)
 	if err != nil {
-		Alert(err, Conf.Slack, true)
+		Alert(err, true)
 	}
 
 	// Log success
 	finished := fmt.Sprintf("Finished the loading %v\n", Batch)
-	slackman.NewMessage(Conf.Slack, "#log---weather", "GoLog", finished, "https://img.icons8.com/cotton/2x/server.png").Send()
 	log.Print(finished)
 }
